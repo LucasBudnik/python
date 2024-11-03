@@ -21,59 +21,53 @@ Mostrar los productos ingresados:
 
 Al seleccionar la opción correspondiente, el sistema debe permitir visualizar los productos almacenados hasta
 el momento.
-
-
-
 '''
 inventario = []
-
-#Menú
-print("\t\tMenú de Opciones:\n\n")
+ #Menú
+print("\t\tMenú de Opciones:\n\n")  
 print("1. Agregar producto.") # OBLIGATORIA
-print("2. Mostrar Producto.") # OBLIGATORIA
+print("2. Mostrar Productos.") # OBLIGATORIA
 print("3. Buscar Producto por nombre.")
 print("4. Eliminar Producto.")
 print("5. Modificar Producto.")
 print("6. Salir.")
 print()
-opcion = int(input("Ingrese opcion"))
+opcion = int(input("Ingrese opcion: "))
+if(opcion == 6): 
+    print("ha seleccionado la opción salir")
 while(opcion != 6):
-
-
-    #Menú
-    print("1. Agregar producto.") # OBLIGATORIA
-    print("2. Mostrar Producto.") # OBLIGATORIA
-    print("3. Buscar Producto por nombre.")
-    print("4. Eliminar Producto.")
-    print("5. Modificar Producto.")
-    print("6. Salir.")
-
-    
-    
-    
     #Selección de Opciones
     #----------------------------------------------------------
     if(opcion == 1): # AGREGAR UN PRODUCTO AL INVENTARIO
-        nombre = (input("Ingrese el nombre del producto: "))
-        stock = int(input("Ingrese stock del producto: "))
-        inventario.append([nombre, stock])
-    
+        volverAAgregar = "S" 
+        while(volverAAgregar == "S")or(volverAAgregar == "s"):
+            nombre = (input("Ingrese el nombre del producto: "))
+            stock = int(input("Ingrese stock del producto (solo valores numericos): "))
+            inventario.append([nombre, stock])
+            volverAAgregar= input("¿Desea agregar otro producto? (S/N): ")
+        '''INICIALIZAMOS LA OPCION DE VOLVER A AGREGAR EN S, 
+        SI EL USUARIO QUIERE AGREGAR OTRO PRODUCTO VUELVE A SELECCIONAR LA OPCION S
+        ACEPTAMOS TANTO S MAYUSCULA COMO s MINUSCULA'''
 
 
     #----------------------------------------------------------
     elif(opcion == 2): # MOSTRAR LOS PRODUCTOS EN EL INVENTARIO
-        print("Inventario:")
-        for producto in inventario:
-            print(f"Nombre: {producto[0]}, Stock: {producto[1]}")
-
-
+        if (len(inventario) == 0):
+            print("inventario vacio")
+        else:
+            indice = 0
+            print("Inventario:")
+            while(indice < len(inventario)):
+                producto = inventario[indice]
+                print(f"Nombre: {producto[0]}, Stock: {producto[1]}")
+                indice+=1
     #----------------------------------------------------------
     elif(opcion == 3): # BUSCAR EL NOMBRE INGRESADO 
         nombre = input("Ingrese nombre a buscar: ")
         existe = False
         for producto in inventario:
             if producto[0] == nombre:  
-                print("El producto esta en la lista")
+                print("El producto está en la lista")
                 existe = True
                 break
         if not existe: 
@@ -128,10 +122,21 @@ while(opcion != 6):
 
     #----------------------------------------------------------
     else:
-        print("Opción seleccionada invalida, por favor vuelva a ingresar otra opción")
+        print("Opción seleccionada invalida")
 
 
 
     #----------------------------------------------------------
-    if(n != 6):
+    if(opcion != 6):
+         #Menú
+        print("\t\tMenú de Opciones:\n\n")  
+        print("1. Agregar producto.") # OBLIGATORIA
+        print("2. Mostrar Productos.") # OBLIGATORIA
+        print("3. Buscar Producto por nombre.")
+        print("4. Eliminar Producto.")
+        print("5. Modificar Producto.")
+        print("6. Salir.")
+        print()
         opcion = int(input("Ingrese opcion: "))
+        if(opcion == 6): 
+            print("ha seleccionado la opción salir")
