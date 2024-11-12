@@ -30,7 +30,7 @@ print("0. to exit")
 print("1. add product")
 print("2. search product")
 print("3. Sale Product")
-key = int(input("select an option (FIN=0)"))
+key = int(input("select an option (FIN=0): "))
 
 while( key != 0):
 ##################################################
@@ -57,6 +57,7 @@ while( key != 0):
             while(search):
                 code = int(input("input searching code: "))
                 index = 0
+                formerIndex = 0
                 product = inventary[index]
                 currentCode = product[0]
                 while(code != currentCode)and(index < len(inventary)):
@@ -106,7 +107,7 @@ while( key != 0):
     print("1. add product")
     print("2. search product")
     print("3. Sale Product")
-    key = int(input("select an option (FIN=0)"))
+    key = int(input("select an option (FIN=0): "))
 ##################################################
 
 
