@@ -60,7 +60,7 @@ while(opcion != 6):
             while(indice < len(inventario)):
                 producto = inventario[indice]
                 print(f"Nombre: {producto[0]}, Stock: {producto[1]}")
-                indice+=1c 
+                indice+=1
     #----------------------------------------------------------
     elif(opcion == 3): # BUSCAR EL NOMBRE INGRESADO 
         nombre = input("Ingrese nombre a buscar: ")
