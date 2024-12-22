@@ -17,5 +17,11 @@ el precio final con el descuento aplicado.
 Mostrá el precio final después de aplicar el descuento.
 '''
 
-# 
-def 
+# El descuento realizado es el precio original menos el precio original por el porcentaje de descuento dividido 100
+def descontar(precio, descuento):
+    return precio - (precio * descuento / 100)
+
+precio = float(input("Ingrese el precio del producto: "))
+descuento = float(input("Ingrese el porcentaje de descuento: "))
+
+print("El precio final con el descuento aplicado es:", descontar(precio, descuento))
