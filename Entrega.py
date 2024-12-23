@@ -4,6 +4,11 @@ from colorama import init,Fore,Back,Style
 import random
 init(autoreset=True)
 
+#Aclaraciones, 
+#se usaron try-excepts
+#La introduccion de datos se dejo automatica para poder probarlo sin necesidad de ir dato por dato
+#aplicando los conocimientos adquiridos del uso de la libreria random
+
 #----------------------------------------------------------------
 # Definición de estilos globales
 HEADER = Fore.YELLOW + Style.BRIGHT
@@ -11,10 +16,11 @@ SUCCESS = Fore.GREEN + Style.BRIGHT
 ERROR = Fore.RED + Style.BRIGHT
 INFO = Fore.CYAN + Style.NORMAL
 RESET = Style.RESET_ALL
+# Al ser un agregado podemos generarlo como global, (igual no lo considero una buena práctica el uso de variables globales)
 #----------------------------------------------------------------
 #FUNCIONES
 #----------------------------------------------------------------
-#FUNCION MENU: MUESTRA EL MENU DE OPCIONES CON LA MEJOR INTERFAZ Y DEVUELVE LA OPCION SELECCIONADA
+#FUNCION MENU: MUESTRA EL MENU DE OPCIONES CON LA INTERFAZ SELECCIONADA
 def Menu():
     print(HEADER + "#################################################")
     print(HEADER + "#\t\tMenú de Opciones:\t\t#")  
@@ -26,15 +32,12 @@ def Menu():
     print(INFO + "\t5. Listado Completo.")
     print(INFO + "\t6. Reporte de Bajo Stock.")
     print(ERROR+"\t7. Salir.\n")
-    opcion = input(INFO + "Ingrese opcion: ")
+    opcion = input(INFO + "Ingrese opción: ")
     return opcion
 #----------------------------------------------------------------
 #REGISTRO DE PRODUCTOS 1
 def RegistroProductos():
-    print(SUCCESS + '''
-        #----------------------------------------------------------------
-        #REGISTRO DE PRODUCTOS
-          ''')
+    print(SUCCESS +"#----------------------------------------------------------------\n#REGISTRO DE PRODUCTOS")
     # se Enlaza el archivo de base de datos
     conexion = sqlite3.connect('inventario.db')
     # Creamos el cursor para interactuar con la base de datos    
@@ -52,7 +55,6 @@ def RegistroProductos():
     '''
     # se ejecuta el codigo sql
     cursor.execute(insert)
-
     # se generan productos aleatorios
     NOMBRES = [
     "Manzana",
@@ -105,15 +107,15 @@ def ConsultaProductos():
     # se ingresa el nombre del producto a conocer en detalle
     nombre = input(SUCCESS + "Ingrese el nombre del producto a consultar: ")
     # se crea el codigo sql para consultar los productos
-    select = "SELECT * FROM productos"
+    select = "SELECT * FROM productos WHERE nombre = ?"
     # se ejecuta el codigo sql  
-    cursor.execute(select)
+    cursor.execute(select,(nombre,))
     # se obtiene el resultado de la consulta
     resultado = cursor.fetchone()
     # se muestra el resultado
     if resultado:
-        print(INFO+f"nombre: {resultado[0]} stock: {resultado[2]} precio: {resultado[3]}")
-
+        print(INFO+f"nombre: {resultado[1]} stock: {resultado[3]} precio: {resultado[4]}$")
+    else: print(ERROR+f"No se encuentran resultados con {nombre}")
 #----------------------------------------------------------------
 #ACTUALIZAR PRODUCTOS 3
 def ActualizacionProductos():
@@ -124,11 +126,17 @@ def ActualizacionProductos():
     cursor = conexion.cursor()
     # se lee un nombre desde teclado para buscar en la base de datos
     nombre = input(INFO+"Nombre del producto: ")
-    # se lee el stock que deseamos actualizar
-    nueva_stock = int(input(INFO+"Nuevo stock: "))
-    # se ejecuta el codigo para actualizar la base de datos
-    ACTUALIZAR = "UPDATE productos SET stock = ? WHERE nombre = ?"
-    cursor.execute(ACTUALIZAR,(nueva_stock, nombre))
+    
+
+    cursor.execute("SELECT nombre FROM productos WHERE nombre = ?",(nombre,))
+    if (cursor.fetchone()):
+        # se lee el stock que deseamos actualizar
+        nuevo_stock = int(input(INFO+"Nuevo stock: "))
+        # se ejecuta el codigo para actualizar la base de datos
+        ACTUALIZAR = "UPDATE productos SET stock = ? WHERE nombre = ?"
+        cursor.execute(ACTUALIZAR,(nuevo_stock, nombre))
+    else:
+        print(ERROR + "El nombre ingresado no tiene candidatos para modificar")
     # se efectua el commit correspondiente
     conexion.commit()
     # se cierra la conexion
