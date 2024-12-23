@@ -1,106 +1,226 @@
 # Entrega de Proyecto Final
-'''
-1. Registro de productos: Ingresar nuevos productos al
-inventario, solicitando nombre, descripción, cantidad
-disponible, precio y categoría.
-
-2. Consulta de productos: Consultar el inventario y
-ver la información detallada de cada producto, como
-stock disponible y precio.
-
-3. Actualización de productos: Modificar la
-cantidad disponible de un producto específico.
-
-4. Eliminación de productos: Permitir eliminar
-productos del inventario.
-
-5. Listado Completo: Generar un listado completo
-del inventario.
-
-6. Reporte de Bajo Stock: Mostrar un reporte de
-productos con bajo stock.
-
-'''
-
 import sqlite3
 from colorama import init,Fore,Back,Style
+import random
 init(autoreset=True)
+
+#----------------------------------------------------------------
+# Definición de estilos globales
+HEADER = Fore.YELLOW + Style.BRIGHT
+SUCCESS = Fore.GREEN + Style.BRIGHT
+ERROR = Fore.RED + Style.BRIGHT
+INFO = Fore.CYAN + Style.NORMAL
+RESET = Style.RESET_ALL
 #----------------------------------------------------------------
 #FUNCIONES
 #----------------------------------------------------------------
 #FUNCION MENU: MUESTRA EL MENU DE OPCIONES CON LA MEJOR INTERFAZ Y DEVUELVE LA OPCION SELECCIONADA
 def Menu():
-    print(Fore.YELLOW + "\t\tMenú de Opciones:\n\n")  
-    print(Fore.YELLOW + "1. Agregar producto.") # OBLIGATORIA
-    print(Fore.YELLOW + "2. Mostrar Productos.") # OBLIGATORIA
-    print(Fore.YELLOW + "3. Buscar Actualizar Producto.")
-    print(Fore.YELLOW + "4. Eliminar Producto.")
-    print(Fore.YELLOW + "5. Listado Completo.")
-    print(Fore.YELLOW + "6. Reporte de Bajo Stock.")
-    print(Fore.YELLOW + "7. Salir.")
-    print()
-    opcion = int(input("Ingrese opcion: "))
+    print(HEADER + "#################################################")
+    print(HEADER + "#\t\tMenú de Opciones:\t\t#")  
+    print(HEADER +"#################################################")
+    print(INFO + "\t1. Agregar producto.")
+    print(INFO + "\t2. Consultar Productos.")
+    print(INFO + "\t3. Actualización de Producto.")
+    print(INFO + "\t4. Eliminación Producto.")
+    print(INFO + "\t5. Listado Completo.")
+    print(INFO + "\t6. Reporte de Bajo Stock.")
+    print(ERROR+"\t7. Salir.\n")
+    opcion = input(INFO + "Ingrese opcion: ")
     return opcion
 #----------------------------------------------------------------
 #REGISTRO DE PRODUCTOS 1
 def RegistroProductos():
-    nombre = input("Ingrese el nombre del producto: ")
-    descripcion = input("Ingrese la descripcion del producto: ")
-    stock = int(input("Ingrese el stock del producto: "))
-    precio = float(input("Ingrese el precio del producto: "))
-    categoria = input("Ingrese la categoria del producto: ")
-    return nombre, descripcion, stock, precio, categoria
+    print(SUCCESS + '''
+        #----------------------------------------------------------------
+        #REGISTRO DE PRODUCTOS
+          ''')
+    # se Enlaza el archivo de base de datos
+    conexion = sqlite3.connect('inventario.db')
+    # Creamos el cursor para interactuar con la base de datos    
+    cursor = conexion.cursor()
+    # Codigo sqlite: se crea la Tabla en base de datos   
+    insert = '''
+        CREATE TABLE IF NOT EXISTS productos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL, 
+        descripcion TEXT, 
+        stock INTEGER NOT NULL, 
+        precio FLOAT NOT NULL, 
+        categoria TEXT
+        )
+    '''
+    # se ejecuta el codigo sql
+    cursor.execute(insert)
 
+    # se generan productos aleatorios
+    NOMBRES = [
+    "Manzana",
+    "Zanahoria",
+    "Tomate",
+    "Atún enlatado",
+    "Gaseosa",
+    "Snack de Maíz",
+    "Barra de Granola",
+    "Cereal Integral",
+    "Aceite de Oliva",
+    "Yogur Natural"
+    ]   
+    CATEGORIAS = ["FRUTAS", "VERDURAS", "PRODUCTOS ENLATADOS", "BEBIDAS", "SNACKS"]
+    DESCRIPCIONES = [
+    "Producto fresco y delicioso, ideal para cualquier ocasión.",
+    "Sabor natural y auténtico, perfecto para disfrutar en cualquier momento.",
+    "Rico en nutrientes, una excelente opción para complementar tu dieta.",
+    "Práctico y fácil de usar, ideal para llevar contigo a donde vayas.",
+    "Una opción sabrosa y saludable, perfecta para satisfacer tus antojos.",
+    "Versátil y delicioso, se adapta a diversas recetas y preparaciones.",
+    "Calidad garantizada, ideal para disfrutar solo o en compañía.",
+    "Fresco y nutritivo, perfecto para un estilo de vida saludable."
+    ]
+    nombre = random.choice(NOMBRES)
+    descripcion = random.choice(DESCRIPCIONES)
+    stock = random.randint(0, 100)
+    precio = random.uniform(10.5, 100.5)
+    categoria = random.choice(CATEGORIAS)
+    
+    # se crea codigo sql para introducir los productos aleatorios
+    insert = "INSERT INTO productos (nombre, descripcion, stock, precio, categoria) VALUES (?,?,?,?,?)"
+    
+    # se ejecuta el codigo sql con los parametros aleatorios
+    conexion.execute(insert,(nombre, descripcion, stock, precio, categoria))
+    # Se muestra lo que se cargo en la base de datos
+    print(SUCCESS + f'''nombre:{nombre}\ndescripcion:{descripcion}\nstock:{stock}\nprecio:{precio}\ncategoria:{categoria}\n ''')
+    # commit
+    conexion.commit()
+    # close
+    conexion.close()
 #----------------------------------------------------------------
-#CONSULTA DE PRODUCTOS 2
+# CONSULTAR PRODUCTOS
 def ConsultaProductos():
-    cursor.execute("SELECT * FROM productos")
-    productos = cursor.fetchall()
-    return productos
+    print(SUCCESS + "#----------------------------------------------------------------\n#CONSULTAR PRODUCTOS")
+    # se conecta con la base de datos
+    conexion = sqlite3.connect('inventario.db')
+    # se crea el cursor
+    cursor = conexion.cursor()
+    # se ingresa el nombre del producto a conocer en detalle
+    nombre = input(SUCCESS + "Ingrese el nombre del producto a consultar: ")
+    # se crea el codigo sql para consultar los productos
+    select = "SELECT * FROM productos"
+    # se ejecuta el codigo sql  
+    cursor.execute(select)
+    # se obtiene el resultado de la consulta
+    resultado = cursor.fetchone()
+    # se muestra el resultado
+    if resultado:
+        print(INFO+f"nombre: {resultado[0]} stock: {resultado[2]} precio: {resultado[3]}")
 
 #----------------------------------------------------------------
-#ACTUALIZACION DE PRODUCTOS 3
+#ACTUALIZAR PRODUCTOS 3
 def ActualizacionProductos():
-    nombre = input("Ingrese el nombre del producto a actualizar: ")
-    stock = int(input("Ingrese el nuevo stock del producto: "))
-    cursor.execute("UPDATE productos SET stock = ? WHERE nombre = ?", (stock, nombre))
-    conn.commit()
-    print("Producto actualizado correctamente")
+    print(SUCCESS + "#----------------------------------------------------------------\n#ACTUALIZACION DE PRODUCTOS")
+    # se crea la conexion con el archivo base de datos
+    conexion = sqlite3.connect('inventario.db')
+    # se crea el cursor para interactuar con la base de datos
+    cursor = conexion.cursor()
+    # se lee un nombre desde teclado para buscar en la base de datos
+    nombre = input(INFO+"Nombre del producto: ")
+    # se lee el stock que deseamos actualizar
+    nueva_stock = int(input(INFO+"Nuevo stock: "))
+    # se ejecuta el codigo para actualizar la base de datos
+    ACTUALIZAR = "UPDATE productos SET stock = ? WHERE nombre = ?"
+    cursor.execute(ACTUALIZAR,(nueva_stock, nombre))
+    # se efectua el commit correspondiente
+    conexion.commit()
+    # se cierra la conexion
+    conexion.close()
 
 #----------------------------------------------------------------
 #ELIMINACION DE PRODUCTOS 4
 def EliminacionProductos():
-    nombre = input("Ingrese el nombre del producto a eliminar: ")
-    cursor.execute("DELETE FROM productos WHERE nombre = ?", (nombre,))
-    conn.commit()
-    print("Producto eliminado correctamente")
+    print(SUCCESS + "#----------------------------------------------------------------\n#ELIMINACION DE PRODUCTOS")
+    # Vincular con el archivo de base de datos
+    conexion = sqlite3.connect('inventario.db')
+    cursor = conexion.cursor()
+    #----------------------------------------------------------------
+    # Se Verifica si la tabla existe
+    VERIF = "SELECT name FROM sqlite_master WHERE type='table' AND name ='productos';"
+    cursor.execute(VERIF)
+    if cursor.fetchone() is None:
+        print(ERROR+"La tabla 'productos' no existe. Asegúrate de crearla primero.")
+        conexion.close()
+        return
+    #----------------------------------------------------------------
+    # Leer el nombre del producto que se desea eliminar
+    nombre = input(INFO + "Ingrese el nombre del producto a eliminar: ")
+    # Crear el código para eliminar producto por nombre
+    ELIMINAR = "DELETE FROM productos WHERE nombre = ?"
+    # validamos mediante try-except si el codigo elimina correctamente
+    try:
+        cursor.execute(ELIMINAR, (nombre,))
+        print(SUCCESS + "eliminacion exitosa")
+    except Exception as e:
+        print("Error al eliminar el producto:", e)
+    # Realizar el commit y cerrar la conexión
+    conexion.commit()
+    conexion.close()
 
 #----------------------------------------------------------------
-#LISTADO COMPLETO DE PRODUCTOS 5
+# LISTADO COMPLETO 5
 def ListadoCompletoProductos():
+    print(SUCCESS + "#----------------------------------------------------------------\n#LISTADO COMPLETO DE PRODUCTOS")
+    # se conecta con el archivo de base de datos
+    conexion = sqlite3.connect('inventario.db')
+    # se activa el cursor para poder interactuar con la base de datos
+    cursor = conexion.cursor()
+    # se ejecuta la solicitud de todos los productos que hay en la base de datos
     cursor.execute("SELECT * FROM productos")
+    # tomamos todos los productos solicitados
     productos = cursor.fetchall()
-    return productos
+    # se recorre la lista de productos obtenida y los va mostrando
+    for product in productos:
+        # Acceder a los elementos de la tupla
+        print(INFO + f"ID: {product[0]}, Nombre: {product[1]}, Descripción: {product[2]}, Stock: {product[3]}, Precio: {product[4]}, Categoría: {product[5]}")
+    # último pero no menos importante, se cierra la conexión
+    conexion.close()
+
 
 #----------------------------------------------------------------
-#REPORTES DE BAJO STOCK 6
+# REPORTE DE BAJO STOCK 6
 def ReporteBajoStock():
-    cursor.execute("SELECT * FROM productos WHERE stock < 10")
-    productos = cursor.fetchall()
-    return productos
+   # se conecta con el archivo de base de datos
+   conexion = sqlite3.connect('inventario.db')
+   # se crea la variable para interactuar con la base de datos
+   cursor = conexion.cursor()
 
+   SOLICITUD_MENOR_STOCK ="SELECT nombre, stock FROM productos WHERE stock < ?"
+   try:
+        limite = int(input(INFO + "ingrese el valor a partir del cual se considera bajo stock "))
+        cursor.execute(SOLICITUD_MENOR_STOCK, (limite,))
+   except ValueError:
+        print(ERROR+"Por favor, ingrese un número válido.")
+   except Exception as e:
+        print(ERROR+"Error al ejecutar la consulta:", e)
+   # Se obtienen todos los datos que cumplen con las caracteristicas pedidas:
+   productos = cursor.fetchall()
+   # se recorre la lista de productos obtenida y los va mostrando
+   if productos:  # Verifica si hay productos en la lista
+        for product in productos:
+            # Formatear la salida para mostrar el nombre y el stock
+            print(ERROR + f"Producto: {product[0]}, Stock: {product[1]}")
+   else:
+        print(INFO + "No hay productos con bajo stock.")
+   conexion.close()
 
+#--------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------PROGRAMA PRINCIPAL----------------------------------------------------------------
 #----------------------------------------------------------------
-#SELECCION DE OPCIONES 
-def selector(opcion, cursor, conn):
-    while opcion != 7:
+#MENU DE OPCIONES
+opcion = Menu()
+while opcion != 7:
+    if opcion.isdigit():
+        opcion = int(opcion)
         if opcion == 1:
-            producto = RegistroProductos()
-            cursor.execute("INSERT INTO productos
-            (producto) VALUES (?, ?, ?)",
-            (nombre, descripcion, stock, precio, categoria)
-            )
-            conn.commit()
+            RegistroProductos()
         elif opcion == 2:
             ConsultaProductos()
         elif opcion == 3:
@@ -112,20 +232,10 @@ def selector(opcion, cursor, conn):
         elif opcion == 6:
             ReporteBajoStock()
         elif opcion == 7:
-            print("Gracias por usar el sistema")
+            print(SUCCESS+"Gracias por usar el sistema")
+            break
         else:
-            print("Opcion no valida")
-
-#--------------------------------------------------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------PROGRAMA PRINCIPAL----------------------------------------------------------------
-#CONEXION A LA BASE DE DATOS
-conn = sqlite3.connect("inventario.db")
-cursor = conn.cursor()
-
-#----------------------------------------------------------------
-#MENU DE OPCIONES
-opcion = Menu()
-selector(opcion)
-conn.close()
+            print(ERROR + "Opción no válida")
+    else:
+        print(ERROR + "Opción no válida. Por favor, ingrese un número del 1 al 7.")
+    opcion = Menu()

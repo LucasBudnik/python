@@ -1,0 +1,82 @@
+'''
+    (''
+    CREATE TABLE IF NOT EXISTS personas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        edad INTEGER NOT NULL
+    )
+    '')
+'''
+
+    #nombre =       input("Ingrese el nombre del producto: ")
+    #descripcion =  input("Ingrese la descripcion del producto: ")
+    #stock =    int(input("Ingrese el stock del producto: "))
+    #precio = float(input("Ingrese el precio del producto: "))
+    #categoria =    input("Ingrese la categoria del producto: ")
+#param = {
+#    "nombre": nombre
+#    "descripcion": descripcion
+#    "stock": stock
+#    "precio": precio
+#    "categoria": categoria
+#}
+
+
+#----------------------------------------------------------------
+#ACTUALIZACION DE PRODUCTOS 3
+ # def ActualizacionProductos():
+ #   nombre = input("Ingrese el nombre del producto a actualizar: ")
+ #   stock = int(input("Ingrese el nuevo stock del producto: "))
+ #   cursor.execute("UPDATE productos SET stock = ? WHERE nombre = ?", (stock, nombre))
+ #   conn.commit()
+ #   print("Producto actualizado correctamente")
+
+#----------------------------------------------------------------
+#ELIMINACION DE PRODUCTOS 4
+ # def EliminacionProductos():
+ #   nombre = input("Ingrese el nombre del producto a eliminar: ")
+ #   cursor.execute("DELETE FROM productos WHERE nombre = ?", (nombre,))
+ #   conn.commit()
+ #   print("Producto eliminado correctamente")
+
+#----------------------------------------------------------------
+#LISTADO COMPLETO DE PRODUCTOS 5
+ # def ListadoCompletoProductos():
+ #   cursor.execute("SELECT * FROM productos")
+ #   productos = cursor.fetchall()
+ #   return productos
+
+#----------------------------------------------------------------
+#REPORTES DE BAJO STOCK 6
+ #  ReporteBajoStock():
+ #  cursor.execute("SELECT * FROM productos WHERE stock < 10")
+ #  productos = cursor.fetchall()
+ #  return productos
+'''
+    1. Registro de productos: Ingresar 
+    nuevos productos al inventario, solicitando 
+    nombre, 
+    descripción, 
+    cantidad disponible (stock), 
+    precio y 
+    categoría.
+
+    2. Consulta de productos: 
+    Consultar el inventario y ver 
+    la información detallada de cada producto, 
+    como stock disponible y precio.
+
+    3. Actualización de productos: Modificar la
+    cantidad disponible de un producto específico.
+
+    4. Eliminación de productos: Permitir eliminar
+    productos del inventario.
+
+    5. Listado Completo: Generar un listado completo
+    del inventario.
+
+    6. Reporte de Bajo Stock: Mostrar un reporte de
+    productos con bajo stock.
+
+'''
+
