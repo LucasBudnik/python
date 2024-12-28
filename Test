@@ -31,13 +31,6 @@
  #   conn.commit()
  #   print("Producto actualizado correctamente")
 
-#----------------------------------------------------------------
-#ELIMINACION DE PRODUCTOS 4
- # def EliminacionProductos():
- #   nombre = input("Ingrese el nombre del producto a eliminar: ")
- #   cursor.execute("DELETE FROM productos WHERE nombre = ?", (nombre,))
- #   conn.commit()
- #   print("Producto eliminado correctamente")
 
 #----------------------------------------------------------------
 #LISTADO COMPLETO DE PRODUCTOS 5

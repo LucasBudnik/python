@@ -148,6 +148,7 @@ def EliminacionProductos():
     print(SUCCESS + "#----------------------------------------------------------------\n#ELIMINACION DE PRODUCTOS")
     # Vincular con el archivo de base de datos
     conexion = sqlite3.connect('inventario.db')
+    # creamos la variable para interactuar con la base de datos
     cursor = conexion.cursor()
     #----------------------------------------------------------------
     # Se Verifica si la tabla existe
